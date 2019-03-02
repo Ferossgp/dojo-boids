@@ -16,16 +16,13 @@
     {:pos         {:x (rand-int width)
                    :y (rand-int height)}
      :speed       (rand max-speed)
-     :orientation (rand 360)}))
+     :direction (rand (* 2 js/Math.PI))}))
 
-(defn draw-boid [boid]
+(defn draw-boid [{{:keys [x y]} :pos}]
   (q/stroke 3)
   (q/stroke-weight 3)
   (q/fill (q/random 255))
-
-  (let [diam 3
-        x    (get-in boid [:pos :x])
-        y    (get-in boid [:pos :y])]
+  (let [diam 3]
     (q/ellipse x y diam diam)))
 
 (defn draw [{:keys [boids history]}]
