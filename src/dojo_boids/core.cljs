@@ -7,7 +7,12 @@
 
 (def ^:const max-speed 3.5)
 
-(defn find-neighbours [boid all-boids])
+(defn distance [{p1 :pos} {p2 :pos}]
+  (let [[x y] (mapv (fn [v1 v2] (Math/abs (- v1 v2))) p1 p2)]
+    (Math/sqrt (+ (* x x) (* y y)))))
+
+(defn find-neighbours [boid boids]
+  )
 
 (defn align-boid [boid neightbours])
 
@@ -34,7 +39,6 @@
     (draw-boid boid)))
 
 (defn update-state [state]
-  
    state)
 
 (defn init [num-boids radius width height]
