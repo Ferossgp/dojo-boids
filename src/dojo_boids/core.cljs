@@ -19,7 +19,26 @@
          neighbour)))
    boids))
 
-(defn align-boid [boid neightbours])
+(defn align-boid [boid neighbours]
+  (let [neighbours-count (count neighbours)
+        neighbours-sum   (apply + (map :orientation neighbours))]
+    (if (pos? neighbours-count)
+      (assoc boid :orientation (/ neighbours-sum neighbours-count))
+      boid)))
+
+(defn average-position [boid neighbours]
+  (let [neighbours-count (count neighbours)
+        neighbours-xsum  (apply + (map #(get-in % [:pos :x]) neighbours))
+        neighbours-ysum  (apply + (map #(get-in % [:pos :y]) neighbours))]
+    (if (pos? neighbours-count)
+      (assoc boid :pos {:x (/ neighbours-xsum neighbours-count)
+                        :y (/ neighbours-ysum neighbours-count)})
+      boid)))
+
+(defn next-position [{:keys [pos speed orientation] :as boid}]
+  (-> boid
+      (update :x #(+ % (* speed (js/Math.cos orientation))))
+      (update :y #(+ % (* speed (js/Math.sin orientation))))))
 
 (defn init-boid [radius width height]
   (fn []
@@ -39,12 +58,20 @@
   (q/background 255)
   (doseq [boids history]
     (doseq [boid boids]
-      (draw-boid boid)))
+         (draw-boid boid)))
   (doseq [boid boids]
     (draw-boid boid)))
 
-(defn update-state [state]
-   state)
+(defn update-boid [boid boids]
+  (let [neighbours (find-neighbours boid boids 5)]
+    (-> boid
+        (average-position neighbours)
+        (align-boid neighbours)
+        (next-position))))
+
+(defn update-state [{:keys [boids] :as state}]
+  (assoc state
+         :boids (map #(update-boid % boids) boids)))
 
 (defn init [num-boids radius width height]
   (fn []
