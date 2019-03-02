@@ -5,15 +5,17 @@
 
 (enable-console-print!)
 
+(def ^:const max-speed 3.5)
+
 (defn find-neighbours [boid all-boids])
 
 (defn align-boid [boid neightbours])
 
 (defn init-boid [radius width height]
   (fn []
-    {:pos         {:x 1
-                   :y 1}
-     :speed       0
+    {:pos         {:x (rand-int width)
+                   :y (rand-int height)}
+     :speed       (rand max-speed)
      :orientation (rand 360)}))
 
 (defn draw-boid [data]
