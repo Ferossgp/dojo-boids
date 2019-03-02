@@ -11,6 +11,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.238"]
                  [org.clojure/core.async  "0.4.474"]
+                 [quil "2.8.0"]
                  [reagent "0.7.0"]]
 
   :plugins [[lein-figwheel "0.5.16"]
