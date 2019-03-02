@@ -21,9 +21,9 @@
 
 (defn align-boid [boid neighbours]
   (let [neighbours-count (count neighbours)
-        neighbours-sum   (apply + (map :orientation neighbours))]
+        neighbours-sum   (apply + (map :direction neighbours))]
     (if (pos? neighbours-count)
-      (assoc boid :orientation (/ neighbours-sum neighbours-count))
+      (assoc boid :direction (/ neighbours-sum neighbours-count))
       boid)))
 
 (defn average-position [boid neighbours]
@@ -31,20 +31,28 @@
         neighbours-xsum  (apply + (map #(get-in % [:pos :x]) neighbours))
         neighbours-ysum  (apply + (map #(get-in % [:pos :y]) neighbours))]
     (if (pos? neighbours-count)
-      (assoc boid :pos {:x (/ neighbours-xsum neighbours-count)
-                        :y (/ neighbours-ysum neighbours-count)})
+      (let [x     (/ neighbours-xsum neighbours-count)
+            y     (/ neighbours-ysum neighbours-count)
+            dx    (- x (get-in boid [:pos :x]))
+            dy    (- y (get-in boid [:pos :y]))
+            theta (js/Math.atan2 dy dx)]
+        (assoc boid :direction theta))
       boid)))
 
-(defn next-position [{:keys [pos speed orientation] :as boid}]
+(defn separation [boid neighbours]
+  (let [sep              25
+        neighbours-count (count neighbours)]))
+
+(defn next-position [{:keys [pos speed direction] :as boid}]
   (-> boid
-      (update :x #(+ % (* speed (js/Math.cos orientation))))
-      (update :y #(+ % (* speed (js/Math.sin orientation))))))
+      (update-in [:pos :x] #(+ % (* speed (js/Math.cos direction))))
+      (update-in [:pos :y] #(+ % (* speed (js/Math.sin direction))))))
 
 (defn init-boid [radius width height]
   (fn []
-    {:pos         {:x (rand-int width)
-                   :y (rand-int height)}
-     :speed       (rand max-speed)
+    {:pos       {:x (rand-int width)
+                 :y (rand-int height)}
+     :speed     (+ 2 (rand 1.5))
      :direction (rand (* 2 js/Math.PI))}))
 
 (defn draw-boid [{{:keys [x y]} :pos}]
@@ -63,10 +71,10 @@
     (draw-boid boid)))
 
 (defn update-boid [boid boids]
-  (let [neighbours (find-neighbours boid boids 5)]
+  (let [neighbours (find-neighbours boid boids 50)]
     (-> boid
         (average-position neighbours)
-        (align-boid neighbours)
+        ;; (align-boid neighbours)
         (next-position))))
 
 (defn update-state [{:keys [boids] :as state}]
