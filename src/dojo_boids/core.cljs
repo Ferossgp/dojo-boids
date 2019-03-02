@@ -13,10 +13,11 @@
 
 (defn find-neighbours [{p1 :pos :as boid} boids radius]
   (keep
-   (fn [{p2 :pos :as neightbour}]
+   (fn [{p2 :pos :as neighbour}]
      (let [distance (distance p1 p2)]
-       (when (and (not= boid neightbour) (< distance radius))
-         neightbour)))))
+       (when (and (not= boid neighbour) (< distance radius))
+         neighbour)))
+   boids))
 
 (defn align-boid [boid neightbours])
 
