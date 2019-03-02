@@ -18,15 +18,14 @@
      :speed       (rand max-speed)
      :orientation (rand 360)}))
 
-(defn draw-boid [data]
-  (println data)
+(defn draw-boid [boid]
   (q/stroke (q/random 255))
   (q/stroke-weight (q/random 10))
   (q/fill (q/random 255))
 
-  (let [diam (q/random 3)
-        x    (q/random (q/width))
-        y    (q/random (q/height))]
+  (let [diam 3
+        x    (get-in boid [:pos :x])
+        y    (get-in boid [:pos :y])]
     (q/ellipse x y diam diam)))
 
 (defn draw [{:keys [boids history]}]
@@ -38,7 +37,7 @@
     (draw-boid boid)))
 
 (defn update-state [state]
-  (println state)
+  
    state)
 
 (defn init [num-boids radius width height]
