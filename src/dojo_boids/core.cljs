@@ -11,8 +11,12 @@
   (let [[x y] (mapv (fn [v1 v2] (Math/abs (- v1 v2))) p1 p2)]
     (Math/sqrt (+ (* x x) (* y y)))))
 
-(defn find-neighbours [boid boids]
-  )
+(defn find-neighbours [{p1 :pos :as boid} boids radius]
+  (keep
+   (fn [{p2 :pos :as neightbour}]
+     (let [distance (distance p1 p2)]
+       (when (and (not= boid neightbour) (< distance radius))
+         neightbour)))))
 
 (defn align-boid [boid neightbours])
 
