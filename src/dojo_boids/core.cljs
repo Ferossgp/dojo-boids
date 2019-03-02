@@ -19,8 +19,8 @@
      :orientation (rand 360)}))
 
 (defn draw-boid [boid]
-  (q/stroke (q/random 255))
-  (q/stroke-weight (q/random 10))
+  (q/stroke 3)
+  (q/stroke-weight 3)
   (q/fill (q/random 255))
 
   (let [diam 3
@@ -69,7 +69,6 @@
 
 (defn hello-world []
   [:div
-   [:h3 "Edit this and watch it change!"]
    [canvas]])
 
 (reagent/render-component [hello-world]
