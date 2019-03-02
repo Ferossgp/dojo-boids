@@ -7,9 +7,10 @@
 
 (def ^:const max-speed 3.5)
 
-(defn distance [{p1 :pos} {p2 :pos}]
-  (let [[x y] (mapv (fn [v1 v2] (Math/abs (- v1 v2))) p1 p2)]
-    (Math/sqrt (+ (* x x) (* y y)))))
+(defn distance [p1 p2]
+  (let [x (- (:x p2) (:x p1))
+        y (- (:y p2) (:y p1))]
+    (js/Math.sqrt (+ (* x x) (* y y)))))
 
 (defn find-neighbours [{p1 :pos :as boid} boids radius]
   (keep
