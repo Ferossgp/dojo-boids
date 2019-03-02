@@ -5,27 +5,26 @@
 
 (enable-console-print!)
 
-(println "This text is printed from src/dojo-boids/core.cljs. Go ahead and edit it and see reloading in action.")
-
-
 (defn find-neighbours [boid all-boids])
 
 (defn align-boid [boid neightbours])
 
 (defn init-boid [radius width height]
-  {:pos         {:x 1
-                 :y 1}
-   :speed       0
-   :orientation (rand 360)})
+  (fn []
+    {:pos         {:x 1
+                   :y 1}
+     :speed       0
+     :orientation (rand 360)}))
 
-(defn draw-boid [_]
-  (q/stroke (q/random 255))             ;; Set the stroke colour to a random grey
-  (q/stroke-weight (q/random 10))       ;; Set the stroke thickness randomly
-  (q/fill (q/random 255))               ;; Set the fill colour to a random grey
+(defn draw-boid [data]
+  (println data)
+  (q/stroke (q/random 255))
+  (q/stroke-weight (q/random 10))
+  (q/fill (q/random 255))
 
-  (let [diam (q/random 100)       ;; Set the diameter to a value between 0 and 100
-        x    (q/random (q/width)) ;; Set the x coord randomly within the sketch
-        y    (q/random (q/height))]     ;; Set the y coord randomly within the sketch
+  (let [diam (q/random 3)
+        x    (q/random (q/width))
+        y    (q/random (q/height))]
     (q/ellipse x y diam diam)))
 
 (defn draw [{:keys [boids history]}]
@@ -36,14 +35,16 @@
   (doseq [boid boids]
     (draw-boid boid)))
 
-(defn update-state []
-  {:pos nil})
+(defn update-state [state]
+  (println state)
+   state)
 
 (defn init [num-boids radius width height]
-  {:boids     (repeatedly num-boids (init-boid radius width height))
-   :width     width
-   :height    height
-   :max-speed 3.5})
+  (fn []
+    {:boids     (repeatedly num-boids (init-boid radius width height))
+     :width     width
+     :height    height
+     :max-speed 3.5}))
 
 (defn canvas []
   (reagent/create-class
